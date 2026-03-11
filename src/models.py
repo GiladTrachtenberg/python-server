@@ -39,7 +39,7 @@ class RefreshToken(Model):
     user: fields.ForeignKeyRelation[User] = fields.ForeignKeyField(
         "models.User", related_name="refresh_tokens", on_delete=fields.CASCADE
     )
-    token_hash = fields.CharField(max_length=255)
+    token_hash = fields.CharField(max_length=255, unique=True)
     family_id = fields.UUIDField(default=uuid4)
     revoked = fields.BooleanField(default=False)
     expires_at = fields.DatetimeField()

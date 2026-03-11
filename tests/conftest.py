@@ -100,6 +100,9 @@ async def db_client(database_url: str) -> AsyncGenerator[AsyncClient]:
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+        conn = connections.get("default")
+        for table in ("jobs", "refresh_tokens", "users"):
+            await conn.execute_query(f"TRUNCATE {table} CASCADE")
 
 
 def pytest_sessionfinish() -> None:

@@ -30,6 +30,8 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 | Implementation plan | `docs/demo-architecture.md`   | 620-649   |
 | DB config           | `src/db.py`                   | full file |
 | ORM models          | `src/models.py`               | full file |
+| Auth implementation | `src/auth.py`                 | full file |
+| Auth schemas        | `src/auth_schemas.py`         | full file |
 | Key decisions       | `docs/ARCHITECTURE.md`        | full file |
 | Current state       | `STATE.md`                    | full file |
 | Context protocol    | `docs/CONTEXT-PROTOCOL.md`    | full file |

@@ -3,7 +3,7 @@
 
 ## Current Phase
 
-**Phase 1: Core Application** — Step 3 of 7
+**Phase 1: Core Application** — Step 4 of 5
 
 ## Phase 1 Progress
 
@@ -11,23 +11,27 @@
 |------|--------------------------------------------------|-------------|
 | 1    | FastAPI skeleton with /healthz + /readyz          | DONE        |
 | 2    | Tortoise ORM models + Aerich migrations setup    | DONE        |
-| 3    | Auth (register, login, refresh with rotation)    | NOT STARTED |
-| 4    | Job creation endpoint + Celery task (stub)       | NOT STARTED |
-| 5    | MinIO integration (upload + presigned URL)       | NOT STARTED |
-| 6    | SSE endpoint with Redis pub/sub                  | NOT STARTED |
-| 7    | GET /jobs (list) and GET /jobs/{id} (status)     | NOT STARTED |
+| 3    | Auth (register, login, refresh with rotation)    | DONE        |
+| 4    | Jobs API + Celery worker + MinIO + SSE           | NOT STARTED |
+| 5    | DevOps (Dockerfile, Helm, CI/CD, Kind)           | NOT STARTED |
 
-## Up Next — Step 3: Auth
+## Up Next — Step 4: Jobs (all features, keep it simple)
 
-- `src/auth.py` — JWT logic, login/register/refresh endpoints
-- Password hashing (argon2/bcrypt)
-- Refresh token rotation with family-based revocation
-- Tests with testcontainers (Postgres)
+- `POST /api/v1/jobs` — create job, dispatch Celery task
+- `GET /api/v1/jobs` — list user's jobs (paginated)
+- `GET /api/v1/jobs/{id}` — single job status + presigned MinIO URL
+- `GET /api/v1/jobs/{id}/events` — SSE via Redis pub/sub
+- `POST /api/v1/jobs/{id}/cancel` — cancel pending/processing job
+- Celery + Redis: worker sleeps, uploads dummy file to MinIO, marks complete
+- MinIO: presigned download URL on completed jobs
+- SSE: worker publishes to Redis, API streams to client
+- ~5-6 integration tests, no unit tests
 
 ## Completed
 
-- **Step 1**: FastAPI skeleton — app factory, `/healthz`, `/readyz`, `/api/v1/` router, error envelope, ruff + mypy strict + 4 tests passing
-- **Step 2**: Tortoise ORM — User/Job/RefreshToken models, Aerich migration, `/readyz` checks DB (503 on failure), production DB guard, testcontainers fixtures, 20 tests passing
+- **Step 1**: FastAPI skeleton — app factory, health routes, error envelope
+- **Step 2**: Tortoise ORM — models, Aerich migration, testcontainers fixtures
+- **Step 3**: Auth — register/login/refresh, argon2 + PyJWT, token rotation
 
 ## Blocked
 
@@ -37,23 +41,19 @@
 
 | File | Purpose |
 |------|---------|
-| `CLAUDE.md` | Agent instructions |
-| `STATE.md` | Project state tracking |
+| `CLAUDE.md` | Agent instructions + pointer index |
 | `docs/demo-architecture.md` | Full architecture plan |
 | `docs/ARCHITECTURE.md` | Key decisions with rationale |
-| `docs/API-OVERVIEW.md` | High-level API endpoint rationale |
-| `docs/CONTEXT-PROTOCOL.md` | Context update protocol |
 | `pyproject.toml` | Project config, deps, tool settings, aerich config |
-| `src/main.py` | App factory, health routes, error handler, Tortoise lifespan |
-| `src/config.py` | Settings from env vars + production DB guard |
+| `src/main.py` | App factory, health routes, error handler, lifespan |
+| `src/config.py` | Settings from env vars + production guards |
 | `src/schemas.py` | ErrorResponse + HealthResponse envelopes |
-| `src/db.py` | Tortoise ORM config, lazy TORTOISE_ORM for Aerich |
-| `src/models.py` | User, Job, RefreshToken models + JobStatus enum |
-| `migrations/` | Aerich migration files (initial: 3 tables) |
+| `src/db.py` | Tortoise ORM config |
+| `src/models.py` | User, Job, RefreshToken models |
+| `src/auth.py` | Auth router, JWT, password hashing, token rotation |
+| `src/auth_schemas.py` | Auth request/response schemas |
 | `tests/conftest.py` | Testcontainers Postgres + AsyncClient fixtures |
-| `tests/test_health.py` | Health endpoint tests (4 tests) |
-| `tests/test_models.py` | Model CRUD/cascade/enum tests (15 tests) |
-| `tests/test_readyz_db.py` | Readyz with real Postgres (1 test) |
+| `tests/test_auth.py` | Auth integration tests (14 tests) |
 
 ## Known Issues
 

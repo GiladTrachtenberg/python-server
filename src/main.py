@@ -97,6 +97,10 @@ def _register_health_routes(app: FastAPI) -> None:
 
 def _register_api_router(app: FastAPI, settings: Settings) -> None:
     router = APIRouter(prefix=settings.api_v1_prefix)
+
+    from src.auth import auth_router
+
+    router.include_router(auth_router)
     app.include_router(router)
 
 
