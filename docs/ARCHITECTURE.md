@@ -22,10 +22,12 @@ architecture as an optional Phase 4 addition.
 ### D3: ArgoCD for CD (GitOps)
 
 ArgoCD watches `deploy/` on main branch. ApplicationSet with sync waves deploys
-all components in order: CNPG(1) → Redis(2) → MinIO(3) → API(4) → Worker(5).
-PreSync hooks handle DB migrations.
+all components in order: CNPG(1) → Redis(2) → MinIO(3) → API(4) → Worker(5) →
+Web(6). PreSync hooks handle DB migrations. Cluster-level operators (CNPG,
+Sealed Secrets) and ArgoCD itself are installed by the Kind bootstrap script
+(`deploy/kind/bootstrap.sh`) — they are NOT managed by ArgoCD.
 
-→ `demo-architecture.md:517-564`
+→ `demo-architecture.md:476-514`
 
 ### D16: `deploy/` Directory Structure
 
@@ -121,6 +123,29 @@ triggered settings validation and Tortoise config in every module that imported
 `src.main`. Use `uvicorn src.main:create_app --factory` instead.
 
 → `src/main.py`
+
+### D17: Real File Generation in Worker
+
+Celery worker generates 5-50MB random binary files (not videos — content doesn't
+matter). Demonstrates realistic object storage usage with presigned URL downloads.
+Written in 1MB chunks via `os.urandom` to avoid holding entire file in memory.
+
+→ `src/tasks.py`
+
+### D18: Separate React Frontend (not served from MinIO)
+
+Frontend is a standalone React SPA (Vite + TS) served by its own nginx container.
+MinIO is only for backend-generated job output files. Frontend communicates with
+the API via nginx reverse proxy (`/api` → FastAPI). Multi-stage Dockerfile:
+`node:22-alpine` builds → `nginx:alpine` serves.
+
+### D19: SSE Query-Param Auth Fallback
+
+Browser `EventSource` API cannot set custom headers. The SSE endpoint accepts an
+optional `?token=` query parameter as auth fallback alongside the standard
+`Authorization: Bearer` header. Token in URL appears in logs — acceptable for demo.
+
+→ `src/sse.py` (to be patched in Step 9)
 
 ### D7: Toolchain Selection
 

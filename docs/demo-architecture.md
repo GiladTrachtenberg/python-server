@@ -475,19 +475,41 @@ Ordering (ArgoCD sync waves or manual apply order):
 
 ### Installation
 
+Two-phase approach: imperative bootstrap (one-time), then declarative GitOps.
+
+**Phase A: Kind bootstrap script** (`deploy/kind/bootstrap.sh`)
+
+Installs cluster-level operators and controllers that ArgoCD depends on or that
+must exist before any Application can sync. These are NOT managed by ArgoCD.
+
 ```bash
-# Infrastructure (operators + dependencies)
+# 1. Create Kind cluster
+kind create cluster --config deploy/kind/kind-config.yaml
+
+# 2. Install cluster-level operators (order matters)
 helm install cnpg cloudnative-pg/cloudnative-pg -n cnpg-system --create-namespace
 helm install sealed-secrets bitnami/sealed-secrets -n kube-system
-helm install redis bitnami/redis -n demo --set auth.existingSecret=redis-sealed-creds
-helm install minio minio/minio -n demo --set existingSecret=minio-sealed-creds
 
-# Apply CNPG Cluster CRD (referencing sealed credentials)
-kubectl apply -f k8s/cnpg-cluster.yaml -n demo
+# 3. Install ArgoCD
+helm install argocd argo/argo-cd -n argocd --create-namespace
 
-# Application
-helm install api helm/video-demo -n demo -f helm/video-demo/values-api.yaml
-helm install worker helm/video-demo -n demo -f helm/video-demo/values-worker.yaml
+# 4. Create namespace for app workloads
+kubectl create namespace demo
+```
+
+**Phase B: ArgoCD ApplicationSet** (declarative, ongoing)
+
+ArgoCD generates one Application per subdirectory under `deploy/`. Each directory
+is either a Helm chart (with `Chart.yaml` declaring upstream dependencies) or raw
+manifests. Sync waves control ordering — no imperative `helm install` for apps.
+
+```
+deploy/
+  infra/cnpg-cluster/  → sync wave 1 (CNPG Cluster CRD)
+  infra/redis/          → sync wave 2 (Chart.yaml wraps bitnami/redis)
+  infra/minio/          → sync wave 3 (Chart.yaml wraps minio/minio)
+  app/                  → sync wave 4-5 (API + Worker, migration PreSync hook)
+  web/                  → sync wave 6 (Frontend nginx)
 ```
 
 ### Sealed Secrets Workflow
