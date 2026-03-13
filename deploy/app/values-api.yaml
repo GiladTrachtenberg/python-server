@@ -2,7 +2,7 @@ component: api
 replicas: 2
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo
-  tag: "3de3bb1fb4e9b4daeb895db8c4ae284c970f0416"
+  tag: "660629507afe800a3ead820f341a22f8d92a586a"
 imagePullSecrets:
   - name: ghcr-pull-secret
 migrations:
