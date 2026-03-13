@@ -1,27 +1,21 @@
 component: api
 replicas: 2
-
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo
-  tag: ""
-
+  tag: "3de3bb1fb4e9b4daeb895db8c4ae284c970f0416"
 imagePullSecrets:
   - name: ghcr-pull-secret
-
 migrations:
   enabled: true
-
 health:
   liveness: /healthz
   readiness: /readyz
   port: 8000
-
 service:
   enabled: true
   type: ClusterIP
   port: 8000
   targetPort: 8000
-
 configMap:
   enabled: true
   data:
@@ -31,7 +25,6 @@ configMap:
     MINIO_BUCKET: video-demo
     MINIO_SECURE: "false"
     RATE_LIMIT_ENABLED: "true"
-
 sharedSecrets:
   - app-shared-secrets
   - app-api-secrets

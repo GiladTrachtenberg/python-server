@@ -1,23 +1,17 @@
 component: worker
 replicas: 2
-
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo
-  tag: ""
-
+  tag: "3de3bb1fb4e9b4daeb895db8c4ae284c970f0416"
 imagePullSecrets:
   - name: ghcr-pull-secret
-
 migrations:
   enabled: false
-
 commandOverride:
   command: ["celery"]
   args: ["-A", "src.tasks", "worker", "--loglevel=info", "--concurrency=2"]
-
 service:
   enabled: false
-
 configMap:
   enabled: true
   data:
@@ -25,6 +19,5 @@ configMap:
     DEBUG: "false"
     MINIO_BUCKET: video-demo
     MINIO_SECURE: "false"
-
 sharedSecrets:
   - app-shared-secrets
