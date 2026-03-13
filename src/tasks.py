@@ -11,7 +11,7 @@ import redis.asyncio as aioredis
 from celery import Celery
 from tortoise import Tortoise, connections
 
-from src.config import Settings
+from src.config import WorkerSettings
 from src.db import get_tortoise_config
 from src.models import JobStatus
 from src.storage import ensure_bucket, get_minio_client, upload_stream
@@ -48,7 +48,7 @@ async def _publish(redis_url: str, job_id: str, status: str) -> None:
         await r.aclose()
 
 
-async def _process(job_id: str, settings: Settings) -> None:
+async def _process(job_id: str, settings: WorkerSettings) -> None:
     """Async core of the process_job task."""
     from src.models import Job
 
@@ -99,7 +99,7 @@ async def _process(job_id: str, settings: Settings) -> None:
 @celery_app.task(name="process_job")
 def process_job(job_id: str) -> None:
     """Celery entry point — bridges sync Celery with async internals."""
-    from src.config import get_settings
+    from src.config import get_worker_settings
 
-    settings = get_settings()
+    settings = get_worker_settings()
     asyncio.run(_process(job_id, settings))

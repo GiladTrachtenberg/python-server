@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 from minio import Minio
 
 if TYPE_CHECKING:
-    from src.config import Settings
+    from src.config import WorkerSettings
 
 
-def get_minio_client(settings: Settings) -> Minio:
+def get_minio_client(settings: WorkerSettings) -> Minio:
     """Create a MinIO client from app settings."""
     return Minio(
         settings.minio_endpoint,
