@@ -2,7 +2,7 @@ component: api
 replicas: 2
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo
-  tag: "b245c6f1b636bf50ea372b7653aa3f2c47f7b1d1"
+  tag: "e9d3d1b1eea6846582255b7fcbb0ecf49a77f071"
 migrations:
   enabled: true
 health:
