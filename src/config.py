@@ -27,10 +27,9 @@ class WorkerSettings(BaseSettings):
 
     @model_validator(mode="after")
     def _reject_defaults_in_production(self) -> WorkerSettings:
-        if not self.debug:
-            if self.database_url == _LOCAL_DEV_DB_URL:
-                msg = "DATABASE_URL must be set explicitly in production (debug=False)"
-                raise ValueError(msg)
+        if not self.debug and self.database_url == _LOCAL_DEV_DB_URL:
+            msg = "DATABASE_URL must be set explicitly in production (debug=False)"
+            raise ValueError(msg)
         return self
 
 
@@ -44,12 +43,9 @@ class Settings(WorkerSettings):
 
     @model_validator(mode="after")
     def _reject_jwt_default_in_production(self) -> Settings:
-        if not self.debug:
-            if self.jwt_secret_key == _LOCAL_DEV_JWT_SECRET:
-                msg = (
-                    "JWT_SECRET_KEY must be set explicitly in production (debug=False)"
-                )
-                raise ValueError(msg)
+        if not self.debug and self.jwt_secret_key == _LOCAL_DEV_JWT_SECRET:
+            msg = "JWT_SECRET_KEY must be set explicitly in production (debug=False)"
+            raise ValueError(msg)
         return self
 
 
