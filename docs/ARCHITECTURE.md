@@ -166,6 +166,17 @@ limiting token-in-URL log exposure to a single endpoint.
 
 → `src/auth.py`
 
+### D22: Celery Broker URL at App Construction
+
+`Celery()` defaults to `amqp://localhost:5672` (RabbitMQ) when no broker is
+specified. The broker URL must be set at app construction time — not inside a
+task body — because the worker needs it to connect and receive tasks. Read
+`CELERY_BROKER_URL` from env at module level with the same default as
+`Settings.celery_broker_url`. Cannot use `Settings()` directly because Pydantic
+validation (D13) would reject imports in non-debug environments.
+
+→ `src/tasks.py:23-26`
+
 ### D7: Toolchain Selection
 
 | Tool       | Why                                                        |

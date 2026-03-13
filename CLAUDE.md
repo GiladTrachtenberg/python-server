@@ -14,6 +14,8 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 
 | Domain              | File                          | Lines     |
 |---------------------|-------------------------------|-----------|
+| Download flow       | `docs/DOWNLOAD-FLOW.md`       | full file |
+| Local dev setup     | `docs/LOCAL-DEV.md`           | full file |
 | API overview        | `docs/API-OVERVIEW.md`        | full file |
 | API endpoints       | `docs/demo-architecture.md`   | 84-103    |
 | Status codes        | `docs/demo-architecture.md`   | 105-119   |
