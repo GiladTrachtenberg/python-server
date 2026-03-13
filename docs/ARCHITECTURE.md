@@ -253,6 +253,19 @@ pulled from GHCR in Kind via `ghcr-pull-secret` imagePullSecret.
 
 → `.github/workflows/ci-backend.yml`, `.github/workflows/ci-frontend.yml`
 
+### D30: Single ApplicationSet with Progressive Sync
+
+One ApplicationSet generates all six ArgoCD Applications. Go template conditionals
+(`goTemplate: true`) switch between single-source (infra: CNPG, Redis, MinIO) and
+multi-source (apps: API, Worker, Web — chart from infra repo, values from app repo).
+RollingSync strategy enforces wave ordering: CNPG(1) → Redis(2) → MinIO(3) →
+API(4) → Worker(5) → Web(6). Each wave must be healthy before the next deploys.
+Labels (`wave: "N"`) on generated Applications are matched by `matchExpressions`
+in the rolling steps. Sealed secrets are applied imperatively by `bootstrap.sh`
+before the ApplicationSet — they must pre-exist for charts that reference them.
+
+→ `python-server-infra/deploy/argocd/applicationset.yaml`
+
 ### D7: Toolchain Selection
 
 | Tool       | Why                                                        |
