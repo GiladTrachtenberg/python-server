@@ -1,24 +1,19 @@
 component: web
 replicas: 1
-
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo-web
-  tag: ""
-
+  tag: "271ee3e973495c2af04e48e1ceabd6404ce2d5a1"
 migrations:
   enabled: false
-
 health:
   liveness: /
   readiness: /
   port: 80
-
 service:
   enabled: true
   type: NodePort
   port: 80
   targetPort: 80
   nodePort: 30080
-
 env:
   API_UPSTREAM: video-demo-api:8000
