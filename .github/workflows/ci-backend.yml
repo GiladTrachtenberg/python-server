@@ -60,7 +60,6 @@ jobs:
   build-and-push:
     needs: [lint, type-check, test]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -81,7 +80,6 @@ jobs:
 
   update-manifests:
     needs: [build-and-push]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
