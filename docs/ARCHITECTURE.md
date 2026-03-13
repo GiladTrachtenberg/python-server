@@ -266,6 +266,25 @@ before the ApplicationSet — they must pre-exist for charts that reference them
 
 → `python-server-infra/deploy/argocd/applicationset.yaml`
 
+### D31: Sequential CI Job Dependencies
+
+Backend CI jobs run in strict order: lint → type-check → test → build-and-push →
+update-manifests. Each stage is progressively more expensive — if lint fails in
+8 seconds, the test job (testcontainers, ~30s) never starts. `needs:` on each
+job prevents downstream runners from even being allocated on failure.
+
+→ `.github/workflows/ci-backend.yml`
+
+### D32: Lowercase GHCR Image Names
+
+`github.repository_owner` preserves GitHub username casing (`GiladTrachtenberg`),
+but Docker/OCI registries require all-lowercase repository names. A bash step
+(`${IMAGE_NAME,,}`) lowercases the workflow-level `IMAGE_NAME` env var before
+passing it to `docker/build-push-action`. Values files also use lowercase
+(`ghcr.io/giladtrachtenberg/video-demo`).
+
+→ `.github/workflows/ci-backend.yml`, `ci-frontend.yml`, `deploy/app/values-*.yaml`
+
 ### D7: Toolchain Selection
 
 | Tool       | Why                                                        |

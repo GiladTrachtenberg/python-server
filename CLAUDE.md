@@ -86,8 +86,10 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 ## CI/CD
 
 - **CI**: Two path-filtered workflows — `ci-backend.yml` (src/, tests/, Dockerfile) and `ci-frontend.yml` (web/)
-- **Images**: Push to GHCR (`ghcr.io/<owner>/video-demo`, `video-demo-web`), tag = git SHA
+- **Job order**: Backend: lint → type-check → test → build → update-manifests (sequential `needs:`)
+- **Images**: Push to GHCR (`ghcr.io/giladtrachtenberg/video-demo`, `video-demo-web`), tag = git SHA, names must be lowercase
 - **Tag update**: CI updates `image.tag` in values files and commits to same branch (Option A)
+- **Actions**: checkout@v6, setup-uv@v7, setup-node@v6, setup-buildx@v4, login-action@v4, build-push-action@v6
 - **CD**: ArgoCD multi-source — chart from `python-server-infra`, values from this repo
 - **Infra repo**: `python-server-infra` holds Helm chart, Kind config, infra manifests
 - **This repo**: `deploy/app/values-*.yaml` + `deploy/web/values-web.yaml` (app-specific values only)

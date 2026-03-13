@@ -1,4 +1,5 @@
 <!-- STATE.md — must stay under 80 lines -->
+
 # Project State
 
 ## Current Phase
@@ -8,8 +9,8 @@
 ## Progress
 
 | Step | Description                                      | Status      |
-|------|--------------------------------------------------|-------------|
-| 1    | FastAPI skeleton with /healthz + /readyz          | DONE        |
+| ---- | ------------------------------------------------ | ----------- |
+| 1    | FastAPI skeleton with /healthz + /readyz         | DONE        |
 | 2    | Tortoise ORM models + Aerich migrations setup    | DONE        |
 | 3    | Auth (register, login, refresh with rotation)    | DONE        |
 | 4    | Jobs API + Celery worker + MinIO + SSE           | DONE        |
@@ -19,15 +20,10 @@
 | 8    | Helm chart + Kind cluster + K8s manifests        | DONE        |
 | 9    | ArgoCD + Sealed Secrets setup on Kind            | DONE        |
 | 10   | ApplicationSet + sync waves (full GitOps deploy) | DONE        |
-| 11   | Fix CI backend workflow (dev deps + errors)      | IN PROGRESS |
+| 11   | Fix CI workflows (dev deps, casing, versions)    | DONE        |
 | 12   | End-to-end validation on Kind (full stack)       | NOT STARTED |
 
-## Up Next — Step 11: Fix CI Backend Workflow
-
-- Fix `uv sync --frozen` missing `--extra dev` (ruff, mypy, pytest not installed)
-- Verify all CI jobs pass: lint, type-check, test, build-and-push
-
-## Step 12: End-to-End Validation on Kind
+## Up Next — Step 12: End-to-End Validation on Kind
 
 - Run bootstrap.sh on Kind cluster
 - Full flow via frontend: register, login, create job, watch SSE, download
@@ -43,6 +39,7 @@
 - **Step 8**: Shared Helm chart + Kind config + infra charts → moved to `python-server-infra` repo. App-specific values remain in `deploy/app/` + `deploy/web/`. GHCR for images, CI updates tags in-repo.
 - **Step 9**: ArgoCD in bootstrap, SealedSecrets (shared + individual), seal-secrets.sh, split CI (ci-backend.yml + ci-frontend.yml with GHCR push + tag update), imagePullSecrets for GHCR.
 - **Step 10**: Single ApplicationSet with RollingSync strategy (progressive sync). Go template conditionals for single-source (infra) vs multi-source (apps). Per-component release names (removed hardcoded component suffix from templates). Bootstrap applies sealed secrets + ApplicationSet.
+- **Step 11**: Fixed CI: `--extra dev` for ruff/mypy/pytest, sequential job deps (lint→type-check→test→build), lowercase GHCR image names, bumped action versions (checkout@v6, setup-uv@v7, setup-node@v6, buildx@v4, login@v4). Added exponential-backoff polling to JobsPage. Web NodePort for Kind access.
 
 ## Blocked
 
