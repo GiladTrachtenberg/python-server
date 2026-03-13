@@ -124,15 +124,7 @@ async def _create_token_pair(
     return access_token, raw_refresh
 
 
-async def get_current_user(
-    request: Request,
-    settings: SettingsDep,
-) -> User:
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        _raise_unauthorized()
-
-    token = auth_header.removeprefix("Bearer ")
+async def _resolve_user(token: str, settings: Settings) -> User:
     try:
         payload = decode_access_token(token, settings)
     except jwt.InvalidTokenError:
@@ -147,7 +139,36 @@ async def get_current_user(
     return user
 
 
+async def get_current_user(
+    request: Request,
+    settings: SettingsDep,
+) -> User:
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        _raise_unauthorized()
+
+    token = auth_header.removeprefix("Bearer ")
+    return await _resolve_user(token, settings)
+
+
+async def get_current_user_sse(
+    request: Request,
+    settings: SettingsDep,
+) -> User:
+    token: str | None = None
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.removeprefix("Bearer ")
+    else:
+        token = request.query_params.get("token")
+
+    if not token:
+        _raise_unauthorized()
+    return await _resolve_user(token, settings)
+
+
 CurrentUser = Annotated[User, Depends(get_current_user)]
+CurrentUserSSE = Annotated[User, Depends(get_current_user_sse)]
 
 
 @auth_router.post("/register", status_code=status.HTTP_201_CREATED)

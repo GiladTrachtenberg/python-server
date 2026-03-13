@@ -144,8 +144,27 @@ the API via nginx reverse proxy (`/api` → FastAPI). Multi-stage Dockerfile:
 Browser `EventSource` API cannot set custom headers. The SSE endpoint accepts an
 optional `?token=` query parameter as auth fallback alongside the standard
 `Authorization: Bearer` header. Token in URL appears in logs — acceptable for demo.
+Scoped to SSE only via `CurrentUserSSE` dependency — normal endpoints reject
+query-param tokens.
 
-→ `src/sse.py` (to be patched in Step 9)
+→ `src/auth.py` (`get_current_user_sse`), `src/sse.py`
+
+### D20: Tortoise ORM 1.1.x Global Fallback
+
+Tortoise 1.1+ uses context-based connection management. The FastAPI lifespan
+requires `_enable_global_fallback=True` on `Tortoise.init()` so connections
+persist across requests. Test fixtures must NOT use this flag — each test creates
+a scoped context that's cleaned up by `connections.close_all()`.
+
+→ `src/main.py:29`
+
+### D21: Scoped SSE Auth Dependency
+
+`get_current_user` (header-only) and `get_current_user_sse` (header + query param)
+are separate dependencies. Only the SSE endpoint uses the query-param variant,
+limiting token-in-URL log exposure to a single endpoint.
+
+→ `src/auth.py`
 
 ### D7: Toolchain Selection
 

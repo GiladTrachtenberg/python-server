@@ -33,8 +33,13 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 | Auth implementation | `src/auth.py`                 | full file |
 | Auth schemas        | `src/auth_schemas.py`         | full file |
 | Rate limiting       | `src/rate_limit.py`           | full file |
+| Frontend source     | `web/src/`                    | 8 files   |
+| Frontend API client | `web/src/api.ts`              | full file |
+| Vite config + proxy | `web/vite.config.ts`          | full file |
+| SSE auth (scoped)   | `src/auth.py`                 | `CurrentUserSSE` |
+| Tortoise fallback   | `src/main.py`                 | line 29   |
 | Frontend plan       | `STATE.md`                    | Steps 9-10|
-| Frontend decisions  | `docs/ARCHITECTURE.md`        | D18, D19  |
+| Frontend decisions  | `docs/ARCHITECTURE.md`        | D18-D21   |
 | Key decisions       | `docs/ARCHITECTURE.md`        | full file |
 | Deploy structure    | `docs/ARCHITECTURE.md` D16    | —         |
 | Current state       | `STATE.md`                    | full file |

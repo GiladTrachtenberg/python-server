@@ -10,7 +10,7 @@ import redis.asyncio as aioredis
 from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse, StreamingResponse
 
-from src.auth import CurrentUser, SettingsDep
+from src.auth import CurrentUserSSE, SettingsDep
 from src.models import Job, JobStatus
 from src.rate_limit import GET_LIMIT, get_user_or_ip, limiter
 from src.schemas import ErrorBody, ErrorResponse
@@ -94,7 +94,7 @@ async def _stream_events(
 @limiter.limit(GET_LIMIT, key_func=get_user_or_ip)  # type: ignore[union-attr]
 async def job_events(
     job_id: UUID,
-    user: CurrentUser,
+    user: CurrentUserSSE,
     settings: SettingsDep,
     request: Request,
 ) -> StreamingResponse | JSONResponse:

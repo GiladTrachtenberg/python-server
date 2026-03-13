@@ -3,7 +3,7 @@
 
 ## Current Phase
 
-**Phase 1: Core Application** — Step 6 of 11
+**Phase 1: Core Application** — Step 7 of 11
 
 ## Progress
 
@@ -14,21 +14,14 @@
 | 3    | Auth (register, login, refresh with rotation)    | DONE        |
 | 4    | Jobs API + Celery worker + MinIO + SSE           | DONE        |
 | 5    | Rate limiting + Dockerfile + CI                  | DONE        |
-| 6    | React frontend (auth, jobs, SSE, download)       | NOT STARTED |
+| 6    | React frontend (auth, jobs, SSE, download)       | DONE        |
 | 7    | Frontend Dockerfile + CI + Helm values           | NOT STARTED |
 | 8    | Helm chart + Kind cluster + K8s manifests        | NOT STARTED |
 | 9    | ArgoCD + Sealed Secrets setup on Kind            | NOT STARTED |
 | 10   | ApplicationSet + sync waves (full GitOps deploy) | NOT STARTED |
 | 11   | End-to-end validation on Kind (full stack)       | NOT STARTED |
 
-## Up Next — Step 6: React Frontend
-
-- Vite + TypeScript + React (no component library, plain CSS)
-- 3 pages: Login/Register, Jobs list, Job detail (SSE + download)
-- `web/` directory with flat file structure (~8 source files)
-- Patch backend SSE endpoint to accept `?token=` query param
-
-## Step 7: Frontend Infra
+## Up Next — Step 7: Frontend Infra
 
 - Multi-stage Dockerfile: node:22-alpine → nginx:alpine
 - nginx.conf: SPA routing + /api proxy (SSE buffering off)
@@ -50,6 +43,7 @@
 - **Step 1-3**: FastAPI skeleton, ORM + migrations, auth with token rotation
 - **Step 4**: Jobs CRUD, Celery task (generates 5-50MB files), MinIO, SSE
 - **Step 5**: Rate limiting (slowapi), Dockerfile, .dockerignore, GitHub Actions CI
+- **Step 6**: React SPA (`web/`), scoped SSE query-param auth, Tortoise 1.1.x global fallback fix
 
 ## Blocked
 

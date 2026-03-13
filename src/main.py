@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 async def _lifespan(app: FastAPI) -> AsyncGenerator[None]:
     settings: Settings = app.state.settings
     config = get_tortoise_config(settings.database_url)
-    await Tortoise.init(config=config)
+    await Tortoise.init(config=config, _enable_global_fallback=True)
 
     try:
         from src.storage import ensure_bucket, get_minio_client
@@ -57,6 +57,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.limiter = rate_limiter
     app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)  # type: ignore[arg-type]
     app.add_middleware(SlowAPIMiddleware)
+
+    if settings.debug:
+        from fastapi.middleware.cors import CORSMiddleware
+
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["http://localhost:5173"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
     _register_error_handlers(app)
     _register_health_routes(app)

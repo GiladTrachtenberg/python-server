@@ -143,3 +143,17 @@ class TestRefresh:
             headers={"Authorization": f"Bearer {token}"},
         )
         assert resp.status_code == 401
+
+
+class TestQueryParamAuth:
+    async def test_query_param_rejected_on_normal_endpoints(
+        self, db_client: AsyncClient,
+    ) -> None:
+        await _register(db_client)
+        login = await _login(db_client)
+        access_token = login["data"]["data"]["access_token"]
+
+        resp = await db_client.get(
+            f"/api/v1/auth/me?token={access_token}",
+        )
+        assert resp.status_code == 401

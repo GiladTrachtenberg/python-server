@@ -20,7 +20,10 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 _CHUNK_SIZE: int = 1_048_576
 
-celery_app: Celery = Celery("video-demo")
+celery_app: Celery = Celery(
+    "video-demo",
+    broker=os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/1"),
+)
 
 
 def _generate_file(size: int) -> BytesIO:
@@ -95,5 +98,4 @@ def process_job(job_id: str) -> None:
     from src.config import get_settings
 
     settings = get_settings()
-    celery_app.conf.broker_url = settings.celery_broker_url
     asyncio.run(_process(job_id, settings))
