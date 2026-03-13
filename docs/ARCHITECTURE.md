@@ -221,6 +221,38 @@ infra changes go through the infra repo.
 
 → `python-server-infra/deploy/`, `deploy/app/values-*.yaml`
 
+### D27: ArgoCD Bootstrap (Not Self-Managed)
+
+ArgoCD is installed via `bootstrap.sh` (Helm) alongside CNPG and Sealed Secrets
+operators. It is NOT managed by an ArgoCD Application — avoids the self-management
+bootstrap paradox. Accessible at `localhost:9090` via NodePort 30090 (insecure
+mode for local Kind). Initial admin password retrieved from `argocd-initial-admin-secret`.
+
+→ `python-server-infra/deploy/kind/bootstrap.sh`, `kind-config.yaml`
+
+### D28: SealedSecrets Strategy
+
+Three layers: infra secrets (cnpg-app-creds, redis-password, minio-creds) are
+standalone SealedSecrets consumed by upstream Helm charts. `app-shared-secrets`
+holds connection strings both API and Worker need (DATABASE_URL, REDIS_URL,
+CELERY_BROKER_URL, MINIO_*). `app-api-secrets` holds JWT_SECRET_KEY (API only).
+Helm chart uses `sharedSecrets` list — each component declares which secrets it
+needs. Worker gets `[app-shared-secrets]`, API gets `[app-shared-secrets, app-api-secrets]`.
+`seal-secrets.sh` generates all sealed YAML files and handles GHCR pull secret.
+Must re-run after cluster recreation (cluster-bound encryption).
+
+→ `python-server-infra/deploy/sealed-secrets/seal-secrets.sh`
+
+### D29: Path-Filtered CI with GitOps Tag Update
+
+Single `ci.yml` replaced by `ci-backend.yml` (src/, tests/, Dockerfile, pyproject.toml)
+and `ci-frontend.yml` (web/). On main push: lint → test → build+push to GHCR →
+update `image.tag` in values files → commit with `[skip ci]`. Path filters prevent
+cross-triggering. `GITHUB_TOKEN` provides both GHCR push and repo write. Images
+pulled from GHCR in Kind via `ghcr-pull-secret` imagePullSecret.
+
+→ `.github/workflows/ci-backend.yml`, `.github/workflows/ci-frontend.yml`
+
 ### D7: Toolchain Selection
 
 | Tool       | Why                                                        |

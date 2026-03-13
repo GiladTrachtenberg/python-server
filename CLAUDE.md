@@ -49,9 +49,16 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 | Deploy structure    | `docs/ARCHITECTURE.md` D16    | —         |
 | Helm API values     | `deploy/app/values-api.yaml`  | full file |
 | Helm Worker values  | `deploy/app/values-worker.yaml`| full file |
+| Shared secrets list | `deploy/app/values-api.yaml`   | sharedSecrets |
 | Infra repo          | `../python-server-infra/`     | separate repo |
 | Current state       | `STATE.md`                    | full file |
 | Context protocol    | `docs/CONTEXT-PROTOCOL.md`    | full file |
+| ArgoCD bootstrap    | `docs/ARCHITECTURE.md` D27    | —         |
+| Shared secrets      | `docs/ARCHITECTURE.md` D28    | —         |
+| CI split            | `docs/ARCHITECTURE.md` D29    | —         |
+| Backend CI          | `.github/workflows/ci-backend.yml` | full file |
+| Frontend CI         | `.github/workflows/ci-frontend.yml`| full file |
+| Seal secrets script | Infra: `deploy/sealed-secrets/seal-secrets.sh` | full file |
 
 ## Code Standards
 

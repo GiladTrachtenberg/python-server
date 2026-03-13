@@ -2,8 +2,11 @@ component: api
 replicas: 2
 
 image:
-  repository: video-demo
+  repository: ghcr.io/GiladTrachtenberg/video-demo
   tag: ""
+
+imagePullSecrets:
+  - name: ghcr-pull-secret
 
 migrations:
   enabled: true
@@ -29,6 +32,6 @@ configMap:
     MINIO_SECURE: "false"
     RATE_LIMIT_ENABLED: "true"
 
-sealedSecret:
-  enabled: true
-  encryptedData: {}
+sharedSecrets:
+  - app-shared-secrets
+  - app-api-secrets
