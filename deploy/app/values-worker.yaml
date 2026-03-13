@@ -2,7 +2,7 @@ component: worker
 replicas: 2
 
 image:
-  repository: ghcr.io/GiladTrachtenberg/video-demo
+  repository: ghcr.io/giladtrachtenberg/video-demo
   tag: ""
 
 imagePullSecrets:
