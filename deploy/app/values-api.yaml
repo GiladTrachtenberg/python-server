@@ -25,4 +25,3 @@ configMap:
     RATE_LIMIT_ENABLED: "true"
 sharedSecrets:
   - app-shared-secrets
-  - app-api-secrets
