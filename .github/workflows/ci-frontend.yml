@@ -33,7 +33,6 @@ jobs:
         working-directory: web
 
   build-and-push:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [lint]
     runs-on: ubuntu-latest
     steps:

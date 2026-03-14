@@ -58,7 +58,6 @@ jobs:
       - run: uv run pytest tests/ -v --tb=short
 
   build-and-push:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [lint, type-check, test]
     runs-on: ubuntu-latest
     steps:
