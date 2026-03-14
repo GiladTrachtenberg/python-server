@@ -2,7 +2,7 @@ component: worker
 replicas: 2
 image:
   repository: ghcr.io/giladtrachtenberg/video-demo
-  tag: "47375e7469a0ccd3d3aed43f4314f621228f4944"
+  tag: "bd2965f01e1dfa3690aa0b28a0410b06a1b77749"
 migrations:
   enabled: false
 commandOverride:
