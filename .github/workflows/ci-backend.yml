@@ -97,4 +97,7 @@ jobs:
           git add deploy/app/values-api.yaml deploy/app/values-worker.yaml
           git diff --cached --quiet && exit 0
           git commit -m "chore: update backend image tag to ${{ github.sha }} [skip ci]"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase && git push && break
+            sleep 2
+          done
