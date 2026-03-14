@@ -4,23 +4,20 @@
 
 ## Current Phase
 
-**Phase 4: Security** — Step 13
+**Phase 4: Refinement** — Step 13
 
 ## Progress
 
 | Step | Description                                      | Status      |
 | ---- | ------------------------------------------------ | ----------- |
 | 1-12 | Phases 1-3 (API, Frontend, Kubernetes)           | DONE        |
-| 13   | Kyverno + refactor infra charts to direct Helm   | NOT STARTED |
+| 13   | Refactor infra charts to direct Helm repo sources | NOT STARTED |
 
-## Up Next — Step 13: Kyverno + Infra Chart Refactor
+## Up Next — Step 13: Infra Chart Refactor
 
 - Refactor Redis/MinIO from wrapper charts to direct Helm repo sources in ApplicationSet
 - Remove `deploy/infra/redis/` and `deploy/infra/minio/` wrapper charts
-- Install Kyverno via Helm in bootstrap
-- Image allow-list: only permit known registries (GHCR, Bitnami, MinIO, CNPG)
-- Disallow `latest` tag on app workloads in `demo` namespace
-- Kyverno policies managed via ArgoCD (wave 0)
+- Values specified inline via `valuesObject` in ApplicationSet generator
 
 ## Completed
 

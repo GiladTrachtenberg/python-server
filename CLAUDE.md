@@ -61,7 +61,7 @@ Kind (K8s) with ArgoCD. Interview-grade showcase of async job processing.
 | Seal secrets script | Infra: `deploy/sealed-secrets/seal-secrets.sh` | full file |
 | ApplicationSet      | Infra: `deploy/argocd/applicationset.yaml`     | full file |
 | Progressive sync    | `docs/ARCHITECTURE.md` D30                     | —         |
-| Kyverno policies    | `docs/ARCHITECTURE.md` D33                     | —         |
+| Direct Helm sources | `docs/ARCHITECTURE.md` D34                     | —         |
 
 ## Code Standards
 
